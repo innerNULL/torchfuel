@@ -32,7 +32,11 @@ class JsonFileDataset(torch.utils.data.Dataset):
         target_record = json.loads(target_record)
 
         if self.transform is None or self.transform == []:
-            return target_record
+            sample = target_record
+        else:
+            sample = self.transform(target_record)
+        return sample
+
 
 
 def build_json_files_dataset(data_path, epoch_num=1, if_shuffle=True, transform=None):

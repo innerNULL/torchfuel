@@ -10,8 +10,9 @@ sys.path.append("../torchfuel")
 import random
 import json
 import torch
+import torchvision
 from datasets import json_dataset
-
+from datasets import json_transforms
 
 
 
@@ -46,11 +47,19 @@ def json_dataset_demo():
     for i in range(len(part0_dataset)): 
         print(part0_dataset[i])
 
-    dataset = json_dataset.build_json_files_dataset(demo_train_data_path, 10, True, None)
+    transforms = torchvision.transforms.Compose([json_transforms.StdJson2JsonTensor()]) 
+    dataset = json_dataset.build_json_files_dataset(demo_train_data_path, 10, True, transforms)
     print(dataset, len(dataset))
+    #for i in range(10):
+    #    print(dataset[i])
 
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=32, shuffle=False, num_workers=4)
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=16, shuffle=False, num_workers=4)
     print(dataloader)
+    for batch_num, batch_data in enumerate(dataloader):
+        if batch_num > 20:
+            break
+        else:
+            print(batch_data)
 
 
 
